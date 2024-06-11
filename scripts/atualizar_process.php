@@ -1,22 +1,31 @@
 <?php
-include_once('..\config.php');
+include_once('../config.php');
 session_start();
-$data = $_POST;
-var_dump($data);
+
+header('Content-Type: application/json');
+
+if (!isset($_SESSION['token'])) {
+    echo json_encode(['success' => false, 'message' => 'Erro: falta de TOKEN.']);
+    exit;
+}
 
 $input = file_get_contents('php://input');
-var_dump($input);
 $data_update = json_decode($input, true);
-var_dump($data_update);
-$url_atualizar = API_URL.'/usuario'; 
+
+if (json_last_error() !== JSON_ERROR_NONE) {
+    echo json_encode(['success' => false, 'message' => 'Erro: dados JSON inválidos.']);
+    exit;
+}
+
+$url_atualizar = API_URL . '/usuario';
 
 $curl_atualizar = curl_init();
 
 curl_setopt_array($curl_atualizar, array(
     CURLOPT_URL => $url_atualizar,
     CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_CUSTOMREQUEST => 'PUT', 
-    CURLOPT_POSTFIELDS => json_encode($data_update), 
+    CURLOPT_CUSTOMREQUEST => 'PUT',
+    CURLOPT_POSTFIELDS => json_encode($data_update),
     CURLOPT_HTTPHEADER => array(
         'Authorization: Bearer ' . $_SESSION['token'],
         'Content-Type: application/json',
@@ -26,9 +35,11 @@ curl_setopt_array($curl_atualizar, array(
 $response = curl_exec($curl_atualizar);
 $httpCode = curl_getinfo($curl_atualizar, CURLINFO_HTTP_CODE);
 
-echo "Mensagem enviada para o servidor: \n";
-echo nl2br(json_encode($data_update, JSON_PRETTY_PRINT) . "\n\n");
-echo "Mensagem recebida do servidor: \n";
-echo nl2br($response . ", ". $httpCode."\n\n");
-
 curl_close($curl_atualizar);
+
+if ($httpCode >= 200 && $httpCode < 300) {
+    echo json_encode(['success' => true, 'message' => 'Dados atualizados com sucesso.']);
+} else {
+    echo json_encode(['success' => false, 'message' => 'Erro ao atualizar os dados: ' . $response]);
+}
+

@@ -28,7 +28,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo nl2br(json_encode($data, JSON_PRETTY_PRINT) . "\n\n");
     echo "Mensagem recebida do servidor: \n";
     echo nl2br($response . ", ". $httpCode."\n\n");
+    $_SESSION['retorno'] = ("Respostado Servidor: " .$response . ", Code: ". $httpCode);
 } else {
+    
     header('Location: ../index.php');
+
     exit();
 }

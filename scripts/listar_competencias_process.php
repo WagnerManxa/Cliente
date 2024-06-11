@@ -1,6 +1,7 @@
 <?php
+include_once('../config.php');
 if (isset($_SESSION['token'])) {
-    $url_competencias = API_URL.'/competencias'; 
+    $url_competencias = API_URL . '/competencias';
 
     $curl_competencias = curl_init();
 
@@ -14,12 +15,12 @@ if (isset($_SESSION['token'])) {
     ));
 
     $response_competencias = curl_exec($curl_competencias);
+    curl_close($curl_competencias);
 
     if ($response_competencias !== false && ($competencias = json_decode($response_competencias, true))) {
         $_SESSION['competencias'] = $competencias;
-        
     } else {
-        $_SESSION['competencias'] = array(); 
+        $_SESSION['competencias'] = array();
         $_SESSION['mensagem'] = "Não foi possível obter as competências do servidor.";
     }
 } else {

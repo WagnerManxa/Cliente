@@ -4,14 +4,21 @@ body {
     background-color: #333;
     color: #fff;
     font-family: 'Press Start 2P', cursive;
+
 }
 
 .container {
     display: flex;
-    height: 100vh;
+    min-height: 100vh; 
+}
+.grupo {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
 }
 
 .menu {
+    position: relative;
     width: 200px;
     background-color: #333;
     padding: 20px;
@@ -55,5 +62,36 @@ body {
 }
 
 .content {
+
     padding: 20px;
+}
+
+.form-field {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea {
+    width: 250px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+}
+
+textarea {
+    height: 100px;
+}
+
+.form-check {
+    display: inline-block;
+    margin-right: 10px;
 }

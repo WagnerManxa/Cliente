@@ -28,11 +28,12 @@
             <label for="ramo">Ramo:</label>
             <input type="text" id="ramo" name="ramo"><br>
             <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" name="descricao"><br><br>
+            <input type="text" id="descricao" maxlength="250" name="descricao"><br><br>
         </div>
        
         <button type="submit">Cadastrar</button>
     </form>
+    
     </div>
     <script>
         document.getElementById("tipoCadastro").addEventListener("change", function() {
@@ -45,6 +46,7 @@
                 camposEmpresa.style.display = "block";
             }
         });
+
     </script>
 </body>
 </html>
