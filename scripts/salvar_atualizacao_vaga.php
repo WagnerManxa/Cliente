@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $vaga_id = $data['id'];
-    unset($data['id']);
+    
 
     $url_vaga = API_URL . '/vagas/' . $vaga_id;
 
@@ -38,10 +38,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $http_code = curl_getinfo($curl, CURLINFO_HTTP_CODE);
     curl_close($curl);
 
-    if ($http_code == 200) {
+    if ($http_code == 201) {
         echo json_encode(['success' => true]);
     } else {
-        echo json_encode(['success' => false, 'mensagem' => 'Erro ao atualizar vaga.']);
+        echo json_encode($response);
     }
 } else {
     echo json_encode(['success' => false, 'mensagem' => 'Nao foi possivel processar a requisicao.']);

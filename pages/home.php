@@ -34,6 +34,31 @@ if (!isset($_SESSION['email'])) {
         });
 
         //--------------------------------------------------------------
+
+       
+        function buscarPerfil(competencias) {
+            $.ajax({
+                url: '../scripts/buscar_perfil_process.php',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ competencias: competencias }),
+                success: function(data) {
+                    $('.content').html(data);
+                },
+                error: function() {
+                    $('.content').html('<p>Erro ao buscar o perfil.</p>');
+                }
+            });
+        }
+
+        // Evento para o botão Buscar Perfil
+        $(document).on('click', '.buscarperfil-button', function() {
+            const competencias = $(this).data('competencias');
+            buscarPerfil(competencias);
+            
+        });
+ 
+        //--------------------------------------------------------------
         
         function cadastrarVagas() {
             $.ajax({
@@ -75,27 +100,26 @@ if (!isset($_SESSION['email'])) {
 
         //--------------------------------------------------------------
 
-        function atualizarVaga(vagaId) {
+        function mensagem() {
             $.ajax({
-                url: '../scripts/atualizar_vaga_process.php',
+                url: '../scripts/mensagem_process.php',
                 type: 'GET',
-                data: { id: vagaId },
                 success: function(data) {
                     $('.content').html(data);
                 },
                 error: function() {
-                    $('.content').html('<p>Erro ao carregar a página de atualização de vaga.</p>');
+                    $('.content').html('<p>Erro ao carregar a página de mensagem.</p>');
                 }
             });
         }
 
-        $(document).on('click', '.atualizar-button', function(e) {
+        $('#mensagem-btn').click(function(e) {
             e.preventDefault();
-            const vagaId = $(this).data('id');
-            atualizarVaga(vagaId);
+            mensagem();
         });
 
         //--------------------------------------------------------------
+
 
         function formBuscarVaga() {
             $.ajax({
@@ -143,38 +167,6 @@ if (!isset($_SESSION['email'])) {
 
         //--------------------------------------------------------------
 
-        function salvarVaga(vagaId) {
-            $.ajax({
-                url: '../scripts/salvar_atualizacao_vaga.php',
-                type: 'GET',
-                success: function(data) {
-                    $('.content').html(data);
-                },
-                error: function() {
-                    $('.content').html('<p>Erro ao carregar a página de atualização de vaga.</p>');
-                }
-            });
-        }
-        $(document).on('click', '.salvar-button', function(e) {
-            e.preventDefault();
-            salvarVaga();
-        });
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-       
-
-        
     });
     </script>
 </head>
@@ -190,7 +182,10 @@ if (!isset($_SESSION['email'])) {
             <li><a id="formbuscarvagas-btn" href="#">Buscar Vaga</a></li>
             <li><a id="cadastrarvaga-btn" href="#">Cadastrar Vagas</a></li>
             <li><a id="listarvagas-btn" href="#">Listar Vagas</a></li>
+            <li><a id ="mensagem-btn" href="#">Mensagem de Empresas</a></li>
+            <li><a href="ativos.php">Usuários ativos</a></li>
             <li><a href="../scripts/logout_process.php">Sair</a></li>
+
         </ul>
     </div>
     <div class="grupo">

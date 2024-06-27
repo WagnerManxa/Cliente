@@ -14,7 +14,7 @@ $data = json_decode(file_get_contents('php://input'), true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$data || !isset($data['id_busca'])) {
-        echo json_encode(['success' => false, 'mensagem' => 'Dados da vaga não fornecidos']);
+        echo json_encode(['success' => false, 'mensagem' => 'Dados da vagaaaa não fornecidos']);
         exit();
     }
 
@@ -120,7 +120,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 alert("Vaga deletada com sucesso");
                                 window.location.reload();
                             } else {
-                                alert("Erro ao deletar a vaga. Código HTTP: " + xhr.status);
+                                alert("Verificar Código HTTP: " + xhr.status);
                             }
                         };
 
@@ -133,9 +133,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 });
             });
 
-             document.querySelectorAll('.atualizar-button').forEach(button => {
+            function atualizarVaga(vagaId) {
+            $.ajax({
+                url: '../scripts/atualizar_vaga_process.php',
+                type: 'POST',
+                data: { id: vagaId },
+                success: function(data) {
+                    $('.content').html(data);
+                },
+                error: function() {
+                    $('.content').html('<p>Erro ao carregar a página de atualização de vaga.</p>');
+                }
+            });
+        }
+
+            document.querySelectorAll('.atualizar-button').forEach(button => {
                  button.addEventListener('click', function() {
-                     const vagaId = this.getAttribute('data-id');                  
+                     const vagaId = this.getAttribute('data-id'); 
+                     atualizarVaga(vagaId);                 
                  });
              });
         </script>
@@ -144,7 +159,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo $response;
         }
     } else {
-        echo json_decode($response, true);
+        echo $response;
         echo (' Código HTTP: ' . $http_code);
     }
 } else {

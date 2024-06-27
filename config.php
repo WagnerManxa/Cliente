@@ -1,8 +1,9 @@
 <?php
 //define('API_URL', 'http://10.20.8.148:8000');
-define('API_URL', 'http://127.0.0.1:8000');
-//define('API_URL', 'http://10.40.14.185:8000/api');
-
+//define('API_URL', 'http://127.0.0.1:8000');
+define('API_URL', 'http://10.20.8.26:3008');
+//define('API_URL', 'http://25.2.28.236:8000');
+//define('API_URL', 'http://25.41.153.28:8000');
 
 define('KEYS_TO_SHOW', ['url', 'content_type','scheme', 'http_code','http_version', 'primary_ip', 'primary_port', 'local_ip', 'local_port', 'effective_method']);
 

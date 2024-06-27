@@ -4,7 +4,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $senha = md5($_POST['senha']);
     $url = API_URL.'/login';
-    
+   
     $data = [
         'email' => $email,
         'senha'=> $senha,
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
         }
     } else {
-        echo "Erro ao fazer a requisição para o servidor.";
+        echo "Erro ao fazer a requisição para o servidor.". $response;
     }
 } else {
     header('Location: ../index.php');

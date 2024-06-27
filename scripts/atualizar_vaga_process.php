@@ -8,7 +8,7 @@ if (!isset($_SESSION['token'])) {
 }
 
 $token = $_SESSION['token'];
-$vaga_id = isset($_GET['id']) ? $_GET['id'] : null;
+$vaga_id = isset($_POST['id']) ? $_POST['id'] : null;
 
 if ($vaga_id === null) {
     echo "ID da vaga não fornecido.";
@@ -60,7 +60,7 @@ $ramos = isset($_SESSION['ramos']) ? $_SESSION['ramos'] : [];
             <select id="ramo_id" name="ramo_id" required>
                 <option value="">Selecione</option>
                 <?php foreach ($ramos as $ramo): ?>
-                    <option value="<?= htmlspecialchars($ramo['id']) ?>" <?= $ramo['id'] == $vaga['ramo_id'] ? 'selected' : '' ?>>
+                    <option value="<?= htmlspecialchars($ramo['id']) ?>" <?= $ramo['id'] == $vaga['ramo']['id'] ? 'selected' : '' ?>>
                         <?= htmlspecialchars($ramo['nome']) ?>
                     </option>
                 <?php endforeach; ?>
@@ -100,15 +100,12 @@ $ramos = isset($_SESSION['ramos']) ? $_SESSION['ramos'] : [];
             <input type="checkbox" id="ativo" name="ativo" <?= $vaga['ativo'] ? 'checked' : '' ?>>
         </div>
         <button type="button" class="salvar-button">Salvar Alterações</button>
-        <button type="button" id="limpar-campos">Limpar Campos</button>
+       
     </form>
 </div>
 
 <script>
-    document.getElementById('limpar-campos').addEventListener('click', function() {
-        document.getElementById('vaga-form').reset(); 
-    });
-
+   
     document.querySelector('.salvar-button').addEventListener('click', function(event) {
         event.preventDefault();
 
@@ -123,7 +120,7 @@ $ramos = isset($_SESSION['ramos']) ? $_SESSION['ramos'] : [];
             });
         });
 
-        let data = {
+        let dados = {
             id: formData.get('id'),
             ramo_id: formData.get('ramo_id'),
             titulo: formData.get('titulo'),
@@ -134,27 +131,16 @@ $ramos = isset($_SESSION['ramos']) ? $_SESSION['ramos'] : [];
             salario_max: formData.get('salario_max') || null,
             ativo: formData.get('ativo') ? true : false
         };
-
-        fetch(form.action, {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer <?= $token ?>',
-                'Content-Type': 'application/json' 
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert("Vaga atualizada com sucesso!");
-                window.location.href = 'home.php';
-            } else {
-                alert("Erro ao atualizar vaga: " + JSON.stringify(data.mensagem));
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            alert("Erro ao atualizar vaga.");
-        });
+        $.ajax({
+                url: '../scripts/salvar_atualizacao_vaga.php',
+                type: 'POST',
+                data: JSON.stringify(dados),
+                success: function(data) {
+                    $('.content').html(data);
+                },
+                error: function() {
+                    $('.content').html('<p>Erro ao carregar a página de atualização de vaga.</p>');
+                }
+            });
     });
 </script>

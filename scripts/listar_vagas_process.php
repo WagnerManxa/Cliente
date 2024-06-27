@@ -48,7 +48,7 @@ if (isset($_SESSION['token'])) {
                         </tr>
                         <tr>
                             <th>Ramo</th>
-                            <td><?= htmlspecialchars($ramos[$vaga['ramo_id']-1]['nome']) ?? 'N/A' ?></td>
+                            <td><?= htmlspecialchars($vaga['ramo']['nome']) ?? 'N/A' ?></td>
                         </tr>
                         <tr>
                             <th>Título</th>
@@ -77,15 +77,19 @@ if (isset($_SESSION['token'])) {
                         <tr>
                             <th>Competências</th>
                             <td>
-                                <?php foreach ($vaga['competencias'] as $competencia): ?>
-                                    <?= htmlspecialchars($competencias[$competencia['id']-1]['nome']."; ") ?? 'N/A' ?>
-                                <?php endforeach; ?>
+                                <?php 
+                                $competencias = [];
+                                foreach ($vaga['competencias'] as $competencia) {
+                                    $competencias[] = htmlspecialchars($competencia['id']);
+                                    echo htmlspecialchars($competencia['nome'] . "; ") ?? 'N/A';
+                                }
+                                ?>
                             </td>
                         </tr>
                     </table>
                     <button class="deletar-button" data-id="<?= $vaga['id'] ?>">Excluir</button>
                     <button class="atualizar-button" data-id="<?= $vaga['id'] ?>">Atualizar</button>
-                    
+                    <button class="buscarperfil-button" data-competencias='<?= json_encode($competencias) ?>'>Buscar Perfil</button>
                 </div>
                 <br>    
             <?php endforeach; ?>
@@ -108,7 +112,7 @@ if (isset($_SESSION['token'])) {
                                 alert("Vaga deletada com sucesso");
                                 window.location.reload();
                             } else {
-                                alert("Erro ao deletar a vaga. Código HTTP: " + xhr.status);
+                                alert("Verificar Código HTTP: " + xhr.status);
                             }
                         };
 
@@ -121,9 +125,24 @@ if (isset($_SESSION['token'])) {
                 });
             });
 
-             document.querySelectorAll('.atualizar-button').forEach(button => {
+            function atualizarVaga(vagaId) {
+            $.ajax({
+                url: '../scripts/atualizar_vaga_process.php',
+                type: 'POST',
+                data: { id: vagaId },
+                success: function(data) {
+                    $('.content').html(data);
+                },
+                error: function() {
+                    $('.content').html('<p>Erro ao carregar a página de atualização de vaga.</p>');
+                }
+            });
+        }
+
+            document.querySelectorAll('.atualizar-button').forEach(button => {
                  button.addEventListener('click', function() {
-                     const vagaId = this.getAttribute('data-id');                  
+                     const vagaId = this.getAttribute('data-id'); 
+                     atualizarVaga(vagaId);                 
                  });
              });
         </script>
@@ -135,4 +154,4 @@ if (isset($_SESSION['token'])) {
 } else {
     echo("Erro ao enviar requisição por falta de TOKEN");
 }
-
+?>
